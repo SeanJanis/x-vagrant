@@ -11,6 +11,11 @@ class othertools {
         require => Exec["aptGetUpdate"]
     }
 
+    package { "vim":
+        ensure => latest,
+        require => Exec["aptGetUpdate"]
+    }
+
     package { "vim-common":
         ensure => latest,
         require => Exec["aptGetUpdate"]
@@ -23,6 +28,11 @@ class othertools {
 
     package { "htop":
         ensure => present,
+        require => Exec["aptGetUpdate"]
+    }
+
+    package { "redis-server":
+        ensure => latest,
         require => Exec["aptGetUpdate"]
     }
 }

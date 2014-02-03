@@ -2,35 +2,28 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu-server-12-10"
-  config.vm.box_url = "https://github.com/downloads/roderik/VagrantQuantal64Box/quantal64.box"
+  # Virtual boxes
+  config.vm.box = "precise32"
+  config.vm.box_url = "http://files.vagrantup.com/precise32.box"
 
-  config.vm.network :forwarded_port, guest: 3000, host: 3000
+  # Forwarded ports
+  config.vm.network :forwarded_port, guest: 1065, host: 1065  # web
+  config.vm.network :forwarded_port, guest: 1066, host: 1066  # api
+  config.vm.network :forwarded_port, guest: 1067, host: 1067  # auth
+
+  # Use forward agent so you can use your keys from within vagrant
+  config.ssh.forward_agent = true
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  config.vm.network :private_network, ip: "192.168.33.10"
+  config.vm.network :private_network, ip: "1.2.3.4"
 
-  # Create a public network, which generally matched to bridged network.
-  # Bridged networks make the machine appear as another physical device on
-  # your network.
-  # config.vm.network :public_network
+  # Shared folder
+  config.vm.synced_folder "../projects", "/home/vagrant/code", :nfs => true
 
-  # Share an additional folder to the guest VM. The first argument is
-  # the path on the host to the actual folder. The second argument is
-  # the path on the guest to mount the folder. And the optional third
-  # argument is a set of non-required options.
-  #config.vm.synced_folder "~/Projects", "/vagrant"
-
-  # Provider-specific configuration so you can fine-tune various
-  # backing providers for Vagrant. These expose provider-specific options.
-  # Example for VirtualBox:
-  #
+  # Fine tune CPUs / Memory
   config.vm.provider :virtualbox do |vb|
-    vb.customize [
-      "modifyvm", :id,
-      "--memory", "1024"
-    ]
+    vb.customize ["modifyvm", :id, "--memory", "4096", "--cpus", "4", "--ioapic", "on"]
   end
 
   config.vm.provision :puppet do |puppet|
