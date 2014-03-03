@@ -35,4 +35,6 @@ Vagrant.configure("2") do |config|
                               #'--debug',
                             ]
   end
+
+  config.vm.provision :shell, :path => "setup.sh"
 end
